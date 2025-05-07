@@ -148,3 +148,15 @@ def text_to_textnodes(text):
     nodes = split_nodes_links(nodes)
     
     return nodes
+
+def markdown_to_blocks(markdown):
+    text_blocks = []
+    splt_markdown = markdown.split('\n\n')
+    for block in splt_markdown:
+        if block == '' or block == '"""':
+            continue
+        cleanup = block.strip()
+        text_blocks.append(cleanup)
+
+    return text_blocks
+
