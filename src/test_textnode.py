@@ -5,12 +5,12 @@ from textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
-        node = TextNode('This is a text node', TextType.NORMAL)
-        node2 = TextNode('This is a text node', TextType.NORMAL)
+        node = TextNode('This is a text node', TextType.TEXT)
+        node2 = TextNode('This is a text node', TextType.TEXT)
         self.assertEqual(node, node2)
 
     def test_neq_type(self):
-        node = TextNode('This is a text node', TextType.NORMAL)
+        node = TextNode('This is a text node', TextType.TEXT)
         node2 = TextNode('This is a text node', TextType.BOLD)
         self.assertNotEqual(node, node2)
 
@@ -25,9 +25,9 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_repr(self):
-        node = TextNode('This is a link', TextType.NORMAL, 'https://boot.dev')
+        node = TextNode('This is a link', TextType.TEXT, 'https://boot.dev')
         self.assertEqual(node.__repr__(),
-                         "TextNode(This is a link, normal, https://boot.dev)"
+                         "TextNode(This is a link, text, https://boot.dev)"
                          )
 
 

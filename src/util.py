@@ -10,7 +10,7 @@ DELIMITER_TO_TEXT_TYPE = {
 }
 
 def tnode_to_hnode(text_node):
-    if text_node.text_type == TextType.NORMAL:
+    if text_node.text_type == TextType.TEXT:
         return LeafNode(None, text_node.text)
 
     if text_node.text_type == TextType.BOLD:
@@ -34,7 +34,7 @@ def tnode_to_hnode(text_node):
 def split_nodes_delimiter(old_nodes, text_type):
     new_nodes = []
     for node in old_nodes:
-        if node.text_type != TextType.NORMAL:
+        if node.text_type != TextType.TEXT:
             new_nodes.append(node)
             continue
 
@@ -53,7 +53,7 @@ def split_nodes_delimiter(old_nodes, text_type):
             if splt_node[i] == '':
                 continue
             if i % 2 == 0:
-                new_nodes_from_splt.append(TextNode(splt_node[i], TextType.NORMAL))
+                new_nodes_from_splt.append(TextNode(splt_node[i], TextType.TEXT))
             else:
                 new_nodes_from_splt.append(TextNode(splt_node[i], text_type))
         
@@ -95,7 +95,7 @@ def split_nodes_images(old_nodes):
                 new_nodes_from_splt.append(
                     TextNode(
                             splt,
-                            TextType.NORMAL,
+                            TextType.TEXT,
                     )
                 )
 
@@ -131,7 +131,7 @@ def split_nodes_links(old_nodes):
                 new_nodes_from_splt.append(
                     TextNode(
                             splt,
-                            TextType.NORMAL,
+                            TextType.TEXT,
                     )
                 )
 
@@ -140,7 +140,7 @@ def split_nodes_links(old_nodes):
     return new_nodes
 
 def text_to_textnodes(text):
-    nodes = [TextNode(text, TextType.NORMAL)]
+    nodes = [TextNode(text, TextType.TEXT)]
     nodes = split_nodes_delimiter(nodes, TextType.BOLD)
     nodes = split_nodes_delimiter(nodes, TextType.ITALIC)
     nodes = split_nodes_delimiter(nodes, TextType.CODE)

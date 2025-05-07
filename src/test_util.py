@@ -7,7 +7,7 @@ from util import tnode_to_hnode, split_nodes_delimiter, extract_markdown_images,
 
 class test_node_to_node(unittest.TestCase):
     def test_text(self):
-        node = TextNode("This is a text node", TextType.NORMAL)
+        node = TextNode("This is a text node", TextType.TEXT)
         html_node = tnode_to_hnode(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
@@ -30,27 +30,27 @@ class test_node_to_node(unittest.TestCase):
 
 class test_split_nodes_delimiter(unittest.TestCase):
     def test_delim_italic(self):
-        node = TextNode("This is not _Italian_, you should know that by now!", TextType.NORMAL)
+        node = TextNode("This is not _Italian_, you should know that by now!", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], TextType.ITALIC)
         self.assertListEqual(
             [
-                TextNode("This is not ", TextType.NORMAL),
+                TextNode("This is not ", TextType.TEXT),
                 TextNode("Italian", TextType.ITALIC),
-                TextNode(", you should know that by now!", TextType.NORMAL),
+                TextNode(", you should know that by now!", TextType.TEXT),
             ],
             new_nodes,
         )
 
     def test_delim_multi_bold(self):
-        node = TextNode("In my native language it's not **bold** it's **FAT**, weird, right?", TextType.NORMAL)
+        node = TextNode("In my native language it's not **bold** it's **FAT**, weird, right?", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], TextType.BOLD)
         self.assertListEqual(
             [
-                TextNode("In my native language it's not ", TextType.NORMAL),
+                TextNode("In my native language it's not ", TextType.TEXT),
                 TextNode("bold", TextType.BOLD),
-                TextNode(" it's ", TextType.NORMAL),
+                TextNode(" it's ", TextType.TEXT),
                 TextNode("FAT", TextType.BOLD),
-                TextNode(", weird, right?", TextType.NORMAL),
+                TextNode(", weird, right?", TextType.TEXT),
             ],
             new_nodes,
         )
@@ -66,26 +66,26 @@ class test_split_nodes_delimiter(unittest.TestCase):
         )
 
     def test_delim_bold_and_code(self):
-        node = TextNode("It ain't much, **but** it's honest `code`", TextType.NORMAL)
+        node = TextNode("It ain't much, **but** it's honest `code`", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], TextType.BOLD)
         new_nodes = split_nodes_delimiter(new_nodes, TextType.CODE)
         self.assertListEqual(
             [
-                TextNode("It ain't much, ", TextType.NORMAL),
+                TextNode("It ain't much, ", TextType.TEXT),
                 TextNode("but", TextType.BOLD),
-                TextNode(" it's honest ", TextType.NORMAL),
+                TextNode(" it's honest ", TextType.TEXT),
                 TextNode("code", TextType.CODE),
             ],
             new_nodes,
         )
 
     def test_delim_start_and_end_bold(self):
-        node = TextNode("**This** is a test, you got it? **BRO**", TextType.NORMAL)
+        node = TextNode("**This** is a test, you got it? **BRO**", TextType.TEXT)
         new_nodes = split_nodes_delimiter([node], TextType.BOLD)
         self.assertListEqual(
             [
                 TextNode("This", TextType.BOLD),
-                TextNode(" is a test, you got it? ", TextType.NORMAL),
+                TextNode(" is a test, you got it? ", TextType.TEXT),
                 TextNode("BRO", TextType.BOLD),
             ],
             new_nodes,
@@ -108,14 +108,14 @@ class test_split_nodes_img_link(unittest.TestCase):
     def test_split_images(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_images([node])
         self.assertListEqual(
             [
-                TextNode("This is text with an ", TextType.NORMAL),
+                TextNode("This is text with an ", TextType.TEXT),
                 TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
-                TextNode(" and another ", TextType.NORMAL),
+                TextNode(" and another ", TextType.TEXT),
                 TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
             ],
             new_nodes,
@@ -124,14 +124,14 @@ class test_split_nodes_img_link(unittest.TestCase):
     def test_split_links(self):
         node = TextNode(
             "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_links([node])
         self.assertListEqual(
             [
-                TextNode("This is text with a link ", TextType.NORMAL),
+                TextNode("This is text with a link ", TextType.TEXT),
                 TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
-                TextNode(" and ", TextType.NORMAL),
+                TextNode(" and ", TextType.TEXT),
                 TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
             ],
             new_nodes,
@@ -140,7 +140,7 @@ class test_split_nodes_img_link(unittest.TestCase):
     def test_split_just_img(self):
         node = TextNode(
             "![image](https://i.imgur.com/zjjcJKZ.png)",
-            TextType.NORMAL,
+            TextType.TEXT,
         )
         new_nodes = split_nodes_images([node])
         self.assertListEqual(
@@ -153,14 +153,14 @@ class test_split_nodes_img_link(unittest.TestCase):
     def test_split_link(self):
         node = TextNode(
                 "This is text with a link [to boot dev](https://www.boot.dev).",
-                TextType.NORMAL
+                TextType.TEXT
         )
         new_nodes = split_nodes_links([node])
         self.assertListEqual(
                 [
-                    TextNode("This is text with a link ", TextType.NORMAL),
+                    TextNode("This is text with a link ", TextType.TEXT),
                     TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
-                    TextNode(".", TextType.NORMAL),
+                    TextNode(".", TextType.TEXT),
                 ],
                 new_nodes,
         )
@@ -172,15 +172,15 @@ class test_text_to_nodes(unittest.TestCase):
         )
         self.assertListEqual(
             [
-                TextNode("This is the ", TextType.NORMAL),
+                TextNode("This is the ", TextType.TEXT),
                 TextNode("ULTIMATE", TextType.BOLD),
-                TextNode(" test! It's not ", TextType.NORMAL),
+                TextNode(" test! It's not ", TextType.TEXT),
                 TextNode("fancy", TextType.ITALIC),
-                TextNode(" but this ", TextType.NORMAL),
+                TextNode(" but this ", TextType.TEXT),
                 TextNode("code", TextType.CODE),
-                TextNode(" took some time. ", TextType.NORMAL),
+                TextNode(" took some time. ", TextType.TEXT),
                 TextNode("Boot.dev", TextType.LINK, "https://boot.dev"),
-                TextNode(" has been great! Thanks, guys!", TextType.NORMAL),
+                TextNode(" has been great! Thanks, guys!", TextType.TEXT),
                 TextNode("Celebration", TextType.IMAGE, "https://imgur.com/P9LqjBX"),
             ],
             nodes,
