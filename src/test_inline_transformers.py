@@ -2,31 +2,8 @@ import unittest
 
 from textnode import TextType, TextNode
 from htmlnode import HTMLNode, LeafNode, ParentNode
-from util import tnode_to_hnode, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_images, split_nodes_links, text_to_textnodes, markdown_to_blocks
+from inline_transformers import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_images, split_nodes_links, text_to_textnodes
 
-
-class test_node_to_node(unittest.TestCase):
-    def test_text(self):
-        node = TextNode("This is a text node", TextType.TEXT)
-        html_node = tnode_to_hnode(node)
-        self.assertEqual(html_node.tag, None)
-        self.assertEqual(html_node.value, "This is a text node")
-
-    def test_italic(self):
-        node = TextNode('Italian food is great', TextType.ITALIC)
-        html_node = tnode_to_hnode(node)
-        self.assertEqual(html_node.tag, 'i')
-        self.assertEqual(html_node.value, 'Italian food is great')
-
-    def test_link(self):
-        node = TextNode('This is a link(to the past?)', TextType.LINK, 'https://boot.dev')
-        html_node = tnode_to_hnode(node)
-        self.assertEqual(html_node.tag, 'a')
-        self.assertEqual(html_node.value, 'This is a link(to the past?)')
-        self.assertEqual(
-            html_node.props,
-            {'href': 'https://boot.dev'},
-        )
 
 class test_split_nodes_delimiter(unittest.TestCase):
     def test_delim_italic(self):
@@ -185,70 +162,6 @@ class test_text_to_nodes(unittest.TestCase):
             ],
             nodes,
         )
-
-class test_markdown_to_blocks(unittest.TestCase):
-    def test_markdown_to_blocks(self):
-        md = """
-This is **bolded** paragraph
-
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
-
-- This is a list
-- with items
-"""
-        blocks = markdown_to_blocks(md)
-        self.assertEqual(
-            blocks,
-            [
-                "This is **bolded** paragraph",
-                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-                "- This is a list\n- with items",
-            ],
-        )
-
-    def test_markdown_to_one_block(self):
-        md = """
-This is just one **BLOCK**!
-"""
-        blocks = markdown_to_blocks(md)
-        self.assertListEqual(
-            [
-                "This is just one **BLOCK**!",
-            ],
-            blocks,
-        )
-
-    def test_markdown_to_blocks_heavyhanded(self):
-        md = """
-My enter key gets stuck all the time!
-
-
-
-
-
-
-It's _really_ annoying **!!!!!!** Here's some reasons:
-
-
-
-
-
-
-- It messes up space in the code
-- Looks bad
-- Takes up an extra few bytes
-"""
-        blocks = markdown_to_blocks(md)
-        self.assertEqual(
-            blocks,
-            [
-                "My enter key gets stuck all the time!",
-                "It's _really_ annoying **!!!!!!** Here's some reasons:",
-                "- It messes up space in the code\n- Looks bad\n- Takes up an extra few bytes",
-            ],
-        )
-
 
 
 if __name__ == '__main__':
