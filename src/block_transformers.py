@@ -49,11 +49,13 @@ def block_to_blocktype(text):
 
 
 def markdown_to_html_node(markdown):
-    blocks = markdown_to_blocks(markdown)
+    blocks = [b for b in markdown_to_blocks(markdown) if b.strip()]
+    print(blocks)
     child_nodes = []
     for block in blocks:
         html_node = block_to_html_node(block)
-        child_nodes.append(html_node)
+        if html_node is not None:
+            child_nodes.append(html_node)
     return ParentNode('div', child_nodes, None)
         
 def block_to_html_node(block):
@@ -76,13 +78,19 @@ def text_to_children(text):
     text_nodes = text_to_textnodes(text)
     child_nodes = []
     for text_node in text_nodes:
+        print(text_node.text)
         child_node = text_node_to_html_node(text_node)
         child_nodes.append(child_node)
+        for text_node in text_nodes:
+            if text_node.text is None:
+                print("Found text_node with None text!")
     return child_nodes
 
 def paragraph_to_html_node(block):
     lines = block.split('\n')
-    paragraph = ' '.join(lines)
+    paragraph = ' '.join(lines).strip()
+    if not paragraph:
+        return None
     children = text_to_children(paragraph)
     return ParentNode('p', children)
 
@@ -137,5 +145,8 @@ def ulist_to_html_node(block):
         html_items.append(ParentNode('li', children))
     return ParentNode('ul', html_items)
 
-
-        
+def extract_title(markdown):
+    header = re.findall(r'\# (.*)', markdown)
+    if header == []:
+        raise Exception("no header found")
+    return header[0].strip('#')

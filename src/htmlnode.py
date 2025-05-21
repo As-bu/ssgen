@@ -27,7 +27,8 @@ class LeafNode(HTMLNode):
         super().__init__(tag, value, None, props)
 
     def to_html(self):
-        if not self.value:
+        if self.tag != 'img' and not self.value:
+            print(f"ValueError! LeafNode: tag={self.tag}, value={self.value}")
             raise ValueError('All leaf nodes must have a value')
 
         if not self.tag:
@@ -45,7 +46,7 @@ class ParentNode(HTMLNode):
     def to_html(self):
         if not self.tag:
             raise ValueError('All parent nodes must have a tag')
-
+        
         if not self.children:
             raise ValueError('Children nodes are required for a parent node')
 

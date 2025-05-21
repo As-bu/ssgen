@@ -7,9 +7,27 @@ from block_transformers import (
     BlockType,
     block_to_blocktype,
     markdown_to_html_node,
+    extract_title,
 )
 
 class test_markdown_to_blocks(unittest.TestCase):
+ 
+    def test_markdown_to_blocks_double(self):
+        md = """
+This is driving me insane.
+
+
+This bug is so deep.
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+                blocks,
+                [
+                    "This is driving me insane.",
+                    "This bug is so deep.",
+                ],
+        )
+
     def test_markdown_to_blocks(self):
         md = """
 This is **bolded** paragraph
@@ -227,6 +245,49 @@ the **same** even with inline stuff
         self.assertEqual(
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+class test_extract_title(unittest.TestCase):
+
+    def test_one_header(self):
+        md = """
+# This heading is getting to my head
+"""
+
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "This heading is getting to my head",
+        )
+
+    def test_mutli_headings(self):
+        md = """
+# This is the only heading we should see.
+
+## You're not wanted here
+
+### Neither are you
+"""
+
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "This is the only heading we should see.",
+        )
+
+    def test_messed_up_headings(self):
+        md = """
+# This should still be the only heading we should see.
+
+# That's despite somebody not understanding formatting
+
+# Look at this mess...
+"""
+
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "This should still be the only heading we should see.",
         )
 
 if __name__ == '__main__':

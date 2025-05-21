@@ -16,23 +16,41 @@ from block_transformers import (
     block_to_blocktype,
     markdown_to_html_node,
 )
+from util import copy_paste_dir, generate_page
 
-def static_to_public(static_dir='static', public_dir='public'):
-    if os.path.exists(public_dir):
-        shutil.rmtree(public_dir)
-    os.mkdir(public_dir)
-    
-    for obj in os.listdir(static_dir):
-        static_path = os.path.join(static_dir, obj)
-        public_path = os.path.join(public_dir, obj)
-    
-        if os.path.isfile(static_path):
-            shutil.copy(static_path, public_path)
-        else:
-            static_to_public(static_path, public_path)
-
+static_path = "./static"
+public_path = "./public"
+content_path = "./content"
+template_path = "./template.html"
+content = ['index.md',
+    'blog/glorfindel/index.md',
+    'blog/tom/index.md',
+    'blog/majesty/index.md',
+    'contact/index.md',
+           ]
+dest = ['index.html',
+    'blog/glorfindel/index.html',
+    'blog/tom/index.html',
+    'blog/majesty/index.html',
+    'contact/index.html',
+           ]
 def main():
-    static_to_public()
+    print("Deleting public directory...")
+    if os.path.exists(public_path):
+        shutil.rmtree(public_path)
+
+    print("Copying static files to public...")
+    copy_paste_dir(static_path, public_path)
+
+    print("Generating Page...")
+    level = 0
+    for md in content:
+        generate_page(
+            os.path.join(content_path, md),
+            template_path,
+            os.path.join(public_path, dest[level]),
+        )
+        level += 1
 
 
 if __name__ == '__main__':

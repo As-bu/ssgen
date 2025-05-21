@@ -133,6 +133,18 @@ class test_split_nodes_img_link(unittest.TestCase):
             ],
             new_nodes,
         )
+    def text_split_img_local(self):
+        node = TextNode(
+            "![JRR Tolkien sitting](/images/tolkien.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_images([node])
+        self.assertListEqual(
+            [
+                TextNode("image", TextType.IMAGE, "/images/tolkien.png"),
+            ],
+            new_nodes,
+        )
 
     def test_split_link(self):
         node = TextNode(
@@ -150,6 +162,11 @@ class test_split_nodes_img_link(unittest.TestCase):
         )
 
 class test_text_to_nodes(unittest.TestCase):
+    
+    def test_text_to_textnodes_empty(self):
+        nodes = text_to_textnodes('')
+        self.assertEqual([], nodes)
+
     def test_text_to_textnodes(self):
         nodes = text_to_textnodes(
                 "This is the **ULTIMATE** test! It's not _fancy_ but this `code` took some time. [Boot.dev](https://boot.dev) has been great! Thanks, guys!![Celebration](https://imgur.com/P9LqjBX)"
