@@ -16,7 +16,7 @@ from block_transformers import (
     block_to_blocktype,
     markdown_to_html_node,
 )
-from util import copy_paste_dir, generate_page
+from util import copy_paste_dir, generate_page, generate_pages_recursive
 
 static_path = "./static"
 public_path = "./public"
@@ -43,14 +43,18 @@ def main():
     copy_paste_dir(static_path, public_path)
 
     print("Generating Page...")
-    level = 0
-    for md in content:
-        generate_page(
-            os.path.join(content_path, md),
-            template_path,
-            os.path.join(public_path, dest[level]),
-        )
-        level += 1
+    generate_pages_recursive(content_path, template_path, public_path)
+
+
+
+    #level = 0
+    #for md in content:
+        #generate_page(
+            #os.path.join(content_path, md),
+            #template_path,
+            #os.path.join(public_path, dest[level]),
+        #)
+        #level += 1
 
 
 if __name__ == '__main__':
