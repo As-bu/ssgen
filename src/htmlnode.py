@@ -28,8 +28,7 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if self.tag != 'img' and not self.value:
-            print(f"ValueError! LeafNode: tag={self.tag}, value={self.value}")
-            raise ValueError('All leaf nodes must have a value')
+            raise ValueError(f"LeafNode: tag={self.tag}, value={self.value} has no value")
 
         if not self.tag:
             return self.value

@@ -36,8 +36,8 @@ def split_nodes_delimiter(old_nodes, text_type):
                 new_nodes_from_splt.append(TextNode(splt_node[i], text_type))
         
         new_nodes.extend(new_nodes_from_splt)
-        for node in new_nodes:
-            print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
+        #for node in new_nodes:
+            #print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
     return new_nodes
 
 def extract_markdown_images(text):
@@ -79,8 +79,8 @@ def split_nodes_images(old_nodes):
                 )
 
         new_nodes.extend(new_nodes_from_splt)
-        for node in new_nodes:
-            print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
+        #for node in new_nodes:
+            #print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
 
     return new_nodes
 
@@ -117,8 +117,8 @@ def split_nodes_links(old_nodes):
                 )
 
         new_nodes.extend(new_nodes_from_splt)
-        for node in new_nodes:
-            print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
+        #for node in new_nodes:
+            #print(f"In splitter: {type(node)}, text: {getattr(node, 'text', None)}")
 
     return new_nodes
 

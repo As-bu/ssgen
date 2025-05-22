@@ -24,31 +24,7 @@ def copy_paste_dir(src, dst):
         else:
             copy_paste_dir(src_path, dst_path)
 
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    
-    from_file = open(from_path, 'r')
-    markdown = from_file.read()
-    from_file.close()
-    
-    template_file = open(template_path, 'r')
-    template = template_file.read()
-    template_file.close()
-
-    html_node = markdown_to_html_node(markdown)
-    html = html_node.to_html()
-    
-    title = extract_title(markdown)
-    finished_html = template.replace('{{ Title }}', title)
-    finished_html = finished_html.replace('{{ Content }}', html)
-
-    if os.path.dirname(os.path.dirname(dest_path)) != '':
-        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    
-    dest_file = open(dest_path, 'w')
-    dest_file.write(finished_html)
-
-def generate_pages_recursive(content_path, template_path, dest_path):
+def generate_pages_recursive(content_path, template_path, dest_path, base_path):
     print(f"Generating page from {content_path} to {dest_path} using {template_path}")
 
     for obj in os.listdir(content_path):
@@ -67,15 +43,17 @@ def generate_pages_recursive(content_path, template_path, dest_path):
                         html = html_node.to_html()
 
                         title = extract_title(markdown)
-                        title_in_html = template.replace('{{ Title }}', title)
-                        ready_html = title_in_html.replace('{{ Content }}', html)
+                        title_replace = template.replace('{{ Title }}', title)
+                        html_replace = title_replace.replace('{{ Content }}', html)
+                        href_replace = html_replace.replace("href='/", f"href='{base_path}")
+                        src_replace = href_replace.replace("src='/", f"src='{base_path}")
 
                         if dst_path.parent != '':
                             os.makedirs(dst_path.parent, exist_ok=True)
 
                         final_dst = Path(dst_path.parent) / f'{src_path.stem}.html'
                         open_final = open(final_dst, 'w')
-                        open_final.write(ready_html)
+                        open_final.write(src_replace)
 
         else:
-            generate_pages_recursive(src_path, template_path, dst_path)
+            generate_pages_recursive(src_path, template_path, dst_path, base_path)
