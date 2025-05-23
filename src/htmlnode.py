@@ -14,7 +14,7 @@ class HTMLNode:
             return props
 
         for x in self.props:
-            props += f" {x}='{self.props[x]}'"
+            props += f' {x}="{self.props[x]}"'
 
         return props
 
