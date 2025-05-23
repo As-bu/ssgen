@@ -45,15 +45,15 @@ def generate_pages_recursive(content_path, template_path, dest_path, base_path):
                         title = extract_title(markdown)
                         title_replace = template.replace('{{ Title }}', title)
                         html_replace = title_replace.replace('{{ Content }}', html)
-                        href_replace = html_replace.replace("href='/", f"href='{base_path}")
-                        src_replace = href_replace.replace("src='/", f"src='{base_path}")
+                        #href_replace = html_replace.replace("href='/", f"href='{base_path}")
+                        #src_replace = href_replace.replace("src='/", f"src='{base_path}")
 
                         if dst_path.parent != '':
                             os.makedirs(dst_path.parent, exist_ok=True)
 
                         final_dst = Path(dst_path.parent) / f'{src_path.stem}.html'
                         open_final = open(final_dst, 'w')
-                        open_final.write(src_replace)
+                        open_final.write(html_replace)
 
         else:
             generate_pages_recursive(src_path, template_path, dst_path, base_path)
